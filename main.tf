@@ -4,8 +4,8 @@ data "cloudinit_config" "control_plane" {
 
   part {
     content_type = "text/x-shellscript"
-    content = file("${path.module}/scripts/startup-script.sh")
-    filename = "startup-script.sh"
+    content      = file("${path.module}/scripts/startup-script.sh")
+    filename     = "startup-script.sh"
   }
 }
 
@@ -15,8 +15,8 @@ data "cloudinit_config" "worker_plane" {
 
   part {
     content_type = "text/x-shellscript"
-    content = file("${path.module}/scripts/startup-script.sh")
-    filename = "startup-script.sh"
+    content      = file("${path.module}/scripts/startup-script.sh")
+    filename     = "startup-script.sh"
   }
 
   part {
@@ -27,22 +27,31 @@ write_files:
   - content: |
       ${base64encode(templatefile("${path.module}/files/agent.hcl.tpl",
     {
-      vault_endpoint   = "${var.vault_endpoint}:8200"
-      tcp_listener     = "127.0.0.1:8200"
-      tcp_listener_tls = false
+      vault_endpoint      = "${var.vault_endpoint}:8200"
+      tcp_listener        = "127.0.0.1:8200"
+      tcp_listener_tls    = false
+      auto_auth_type      = var.auto_auth_type
+      gcp_node_role       = var.gcp_node_role
+      gcp_service_account = var.gcp_service_account
+      gcp_project_id      = var.gcp_project_id
+      aws_node_role       = var.aws_node_role
+      aws_region          = var.aws_region
+      aws_access_key      = var.aws_access_key
+      aws_secret_key      = var.aws_secret_key
+      oci_node_role       = var.oci_node_role
     }
-))},
+    ))},
     encoding: b64
     owner: vault:vault
     path: /etc/vault.d/agent.hcl
     permissions: '0750'
   - content: |
       ${base64encode(templatefile("${path.module}/files/consul-agent.hcl.tmpl",
-  {
-    cluster_nodes = var.cluster_nodes,
-    dc_name       = var.dc_name
-  }
-))},
+    {
+      cluster_nodes = var.cluster_nodes,
+      dc_name       = var.dc_name
+    }
+    ))},
     encoding: b64
     owner: vault:certsreaders
     path: /etc/consul.d/consul-agent.hcl
@@ -67,11 +76,11 @@ write_files:
     permissions: '0750'
   - content: |
       ${base64encode(templatefile("${path.module}/files/nomad-client.hcl.tmpl",
-  {
-    cluster_nodes     = {},
-    dc_name           = var.dc_name
-    envoy_proxy_image = "asfdas"
-  }
+    {
+      cluster_nodes     = {},
+      dc_name           = var.dc_name
+      envoy_proxy_image = "asfdas"
+    }
 ))},
     encoding: b64
     owner: vault:certsreaders

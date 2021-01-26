@@ -14,12 +14,55 @@ vault {
   tls_disable = true
   address     = "${vault_endpoint}"
 }
-auto_auth {
 
+auto_auth {
+%{ if auto_auth_type == 'gcp'}
+  method "gcp" {
+    config = {
+       type="iam"
+       role="${gcp_node_role}"
+       service_account="${gcp_service_account}"
+       project="${gcp_project_id}"
+    }
+  }
+%{ endif }
+%{ if auto_auth_type == 'aws' }
+  method "aws" {
+    config = {
+       type="iam"
+       role="${aws_node_role}"
+       region="${aws_region}"
+       %{ if aws_access_key != null ~}access_key="${aws_access_key}"%{~ endif }
+       %{ if aws_secret_key != null ~}secret_key="${aws_secret_key}"%{~ endif }
+    }
+  }
+%{ endif }
+%{ if auto_auth_type == 'oci' }
+  method "oci" {
+    config = {
+       auth_type="instance_principal"
+       role="${oci_node_role}"
+    }
+  }
+%{ endif }
+%{ if auto_auth_type == 'approle' }
+  method "approle" {
+    config = {
+       role_id_file_path="/etc/vault.d/role-id"
+       secret_id_file_path="/etc/vault.d/secret-id"
+    }
+  }
+%{ endif }
   sink {
     type = "file"
     config = {
       path = "/etc/consul.d/vault_token"
+    }
+  }
+  sink {
+    type = "file"
+    config = {
+      path = "/etc/nomad.d/vault_token"
     }
   }
 }

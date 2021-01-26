@@ -27,7 +27,7 @@ write_files:
   - content: |
       ${base64encode(templatefile("${path.module}/files/agent.hcl.tpl",
     {
-      vault_endpoint      = "${var.vault_endpoint}:8200"
+      vault_endpoint      = var.vault_endpoint
       tcp_listener        = "127.0.0.1:8200"
       tcp_listener_tls    = false
       auto_auth_type      = var.auto_auth_type

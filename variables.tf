@@ -12,6 +12,7 @@ variable "auto_auth_type" {
   default = ""
   validation {
     condition = contains(toset(["aws", "oci", "gcp", "approle"]), var.auto_auth_type)
+    error_message = "Unsupported auto_auth_type value. Supported values: gcp, oci, approle, aws."
   }
 }
 

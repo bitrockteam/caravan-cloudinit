@@ -16,7 +16,7 @@ vault {
 }
 
 auto_auth {
-%{ if auto_auth_type == 'gcp'}
+%{ if auto_auth_type == "gcp" }
   method "gcp" {
     config = {
        type="iam"
@@ -26,7 +26,7 @@ auto_auth {
     }
   }
 %{ endif }
-%{ if auto_auth_type == 'aws' }
+%{ if auto_auth_type == "aws" }
   method "aws" {
     config = {
        type="iam"
@@ -37,7 +37,7 @@ auto_auth {
     }
   }
 %{ endif }
-%{ if auto_auth_type == 'oci' }
+%{ if auto_auth_type == "oci" }
   method "oci" {
     config = {
        auth_type="instance_principal"
@@ -45,7 +45,7 @@ auto_auth {
     }
   }
 %{ endif }
-%{ if auto_auth_type == 'approle' }
+%{ if auto_auth_type == "approle" }
   method "approle" {
     config = {
        role_id_file_path="/etc/vault.d/role-id"

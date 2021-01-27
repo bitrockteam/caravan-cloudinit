@@ -72,7 +72,7 @@ write_files:
   - content: |
       ${base64encode(templatefile("${path.module}/files/nomad-client.hcl.tmpl",
     {
-      cluster_nodes     = {},
+      cluster_nodes     = var.cluster_nodes,
       dc_name           = var.dc_name
       envoy_proxy_image = "asfdas"
     }

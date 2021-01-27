@@ -4,7 +4,9 @@ if [[ `hostname` == clustnode* ]]; then
     sudo systemctl enable nomad-watcher.path && \
     sudo systemctl enable nomad-watcher.service && \
     sudo systemctl start nomad-watcher.path && \
-    sudo systemctl start nomad-watcher.service
+    sudo systemctl start nomad-watcher.service && \
+    instance_id="${TOKEN=`curl -X PUT "http://169.254.169.254/latest/api/token" -H "X-aws-ec2-metadata-token-ttl-seconds: 21600"` && curl -H "X-aws-ec2-metadata-token: $TOKEN" -v http://169.254.169.254/latest/meta-data/instance-id}" && \
+    aws ec2 create-tags --resources "$instance_id" --tags 'Key=cloudinit-complete,Value=true'
 else
     sleep 60s && \
     systemctl restart vault-agent && \
@@ -27,6 +29,8 @@ if [[ `hostname` == monitoring* ]]; then
     sudo systemctl enable grafana-server && \
     sudo systemctl start grafana-server
 fi
+
+
 
 
 # (crontab -l 2>/dev/null; echo "*/15 * * * * /usr/bin/systemctl restart docker-login.service") | crontab -

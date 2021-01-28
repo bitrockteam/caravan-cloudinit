@@ -78,7 +78,7 @@ write_files:
     ))},
     encoding: b64
     owner: vault:certsreaders
-    path: /etc/consul.d/consul-agent.hcl
+    path: /etc/consul.d/consul-agent.hcl.tmpl
     permissions: '0750'
   - content: |
       ${base64encode(file("${path.module}/files/ca.tmpl"))},
@@ -108,7 +108,7 @@ write_files:
 ))},
     encoding: b64
     owner: vault:certsreaders
-    path: /etc/nomad.d/nomad-client.hcl
+    path: /etc/nomad.d/nomad-client.hcl.tmpl
     permissions: '0750'
   - content: |
       ${base64encode(file("${path.module}/files/nomad-ca.tmpl"))},

@@ -32,7 +32,7 @@ data "cloudinit_config" "control_plane" {
 
 part {
   content_type = "text/x-shellscript"
-  content      = file("${path.module}/scripts/startup-script.sh")
+  content      = file("${path.module}/scripts/control-plane-startup.sh")
   filename     = "startup-script.sh"
 }
 }
@@ -139,7 +139,7 @@ EOF
 
 part {
   content_type = "text/x-shellscript"
-  content      = file("${path.module}/scripts/startup-script.sh")
+  content      = file("${path.module}/scripts/worker-plane-startup.sh")
   filename     = "startup-script.sh"
 }
 }

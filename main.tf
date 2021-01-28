@@ -18,7 +18,6 @@ write_files:
       gcp_service_account = var.gcp_service_account
       gcp_project_id      = var.gcp_project_id
       aws_node_role       = var.aws_node_role
-      aws_region          = var.aws_region
       aws_access_key      = var.aws_access_key
       aws_secret_key      = var.aws_secret_key
       oci_node_role       = var.oci_node_role

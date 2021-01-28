@@ -11,7 +11,7 @@ variable "auto_auth_type" {
   type    = string
   default = ""
   validation {
-    condition = contains(toset(["aws", "oci", "gcp", "approle"]), var.auto_auth_type)
+    condition     = contains(toset(["aws", "oci", "gcp", "approle"]), var.auto_auth_type)
     error_message = "Unsupported auto_auth_type value. Supported values: gcp, oci, approle, aws."
   }
 }
@@ -41,11 +41,6 @@ variable "aws_node_role" {
   type        = string
   default     = null
   description = "(optional) Configured AWS role of the node"
-}
-variable "aws_region" {
-  type        = string
-  default     = null
-  description = "(optional) Configured AWS region of the node"
 }
 variable "aws_access_key" {
   type        = string

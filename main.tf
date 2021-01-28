@@ -23,19 +23,19 @@ write_files:
       aws_secret_key      = var.aws_secret_key
       oci_node_role       = var.oci_node_role
     }
-    ))},
+))},
     encoding: b64
     owner: vault:vault
     path: /etc/vault.d/agent.hcl
     permissions: '0750'
     EOF
-  }
-  
-  part {
-    content_type = "text/x-shellscript"
-    content      = file("${path.module}/scripts/startup-script.sh")
-    filename     = "startup-script.sh"
-  }
+}
+
+part {
+  content_type = "text/x-shellscript"
+  content      = file("${path.module}/scripts/startup-script.sh")
+  filename     = "startup-script.sh"
+}
 }
 
 data "cloudinit_config" "worker_plane" {
@@ -59,7 +59,6 @@ write_files:
       gcp_service_account = var.gcp_service_account
       gcp_project_id      = var.gcp_project_id
       aws_node_role       = var.aws_node_role
-      aws_region          = var.aws_region
       aws_access_key      = var.aws_access_key
       aws_secret_key      = var.aws_secret_key
       oci_node_role       = var.oci_node_role
@@ -88,9 +87,9 @@ write_files:
     permissions: '0750'
   - content: |
       ${base64encode(templatefile("${path.module}/files/cert.tmpl",
-      {
-        dc_name       = var.dc_name
-      }
+    {
+      dc_name = var.dc_name
+    }
     ))},
     encoding: b64
     owner: vault:certsreaders
@@ -98,9 +97,9 @@ write_files:
     permissions: '0750'
   - content: |
       ${base64encode(templatefile("${path.module}/files/keyfile.tmpl",
-      {
-        dc_name       = var.dc_name
-      }
+    {
+      dc_name = var.dc_name
+    }
     ))},
     encoding: b64
     owner: vault:certsreaders
@@ -137,11 +136,11 @@ write_files:
     path: /etc/nomad.d/nomad_keyfile.tmpl
     permissions: '0750'
 EOF
-  }
+}
 
-  part {
-    content_type = "text/x-shellscript"
-    content      = file("${path.module}/scripts/startup-script.sh")
-    filename     = "startup-script.sh"
-  }
+part {
+  content_type = "text/x-shellscript"
+  content      = file("${path.module}/scripts/startup-script.sh")
+  filename     = "startup-script.sh"
+}
 }

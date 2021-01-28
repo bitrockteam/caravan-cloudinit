@@ -87,13 +87,21 @@ write_files:
     path: /etc/consul.d/ca.tmpl
     permissions: '0750'
   - content: |
-      ${base64encode(file("${path.module}/files/cert.tmpl"))},
+      ${base64encode(templatefile("${path.module}/files/cert.tmpl",
+      {
+        dc_name       = var.dc_name
+      }
+    ))},
     encoding: b64
     owner: vault:certsreaders
     path: /etc/consul.d/cert.tmpl
     permissions: '0750'
   - content: |
-      ${base64encode(file("${path.module}/files/keyfile.tmpl"))},
+      ${base64encode(templatefile("${path.module}/files/keyfile.tmpl",
+      {
+        dc_name       = var.dc_name
+      }
+    ))},
     encoding: b64
     owner: vault:certsreaders
     path: /etc/consul.d/keyfile.tmpl
@@ -108,7 +116,7 @@ write_files:
 ))},
     encoding: b64
     owner: vault:certsreaders
-    path: /etc/nomad.d/nomad-client.hcl.tmpl
+    path: /etc/nomad.d/nomad.hcl.tmpl
     permissions: '0750'
   - content: |
       ${base64encode(file("${path.module}/files/nomad-ca.tmpl"))},

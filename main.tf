@@ -1,6 +1,6 @@
 data "cloudinit_config" "control_plane" {
-  gzip          = true
-  base64_encode = true
+  gzip          = var.gzip
+  base64_encode = var.base64
 
 //  part {
 //    content_type = "text/cloud-config"
@@ -38,8 +38,8 @@ part {
 }
 
 data "cloudinit_config" "worker_plane" {
-  gzip          = true
-  base64_encode = true
+  gzip          = var.gzip
+  base64_encode = var.base64
 
 
   part {

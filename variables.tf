@@ -7,6 +7,14 @@ variable "vault_endpoint" {
 variable "dc_name" {
   type = string
 }
+variable "base64" {
+  type = bool
+  default = true
+}
+variable "gzip" {
+  type = bool
+  default = true
+}
 variable "auto_auth_type" {
   type    = string
   default = ""

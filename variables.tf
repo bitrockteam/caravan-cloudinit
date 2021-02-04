@@ -68,6 +68,6 @@ variable "azure_node_role" {
 }
 variable "azure_resource" {
   type        = string
-  default     = null
+  default     = "https://management.azure.com/"
   description = "(optional) A configured Azure AD application which is used as the resource for generating MSI access tokens"
 }

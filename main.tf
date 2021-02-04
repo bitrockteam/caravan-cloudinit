@@ -2,34 +2,6 @@ data "cloudinit_config" "control_plane" {
   gzip          = var.gzip
   base64_encode = var.base64
 
-  //  part {
-  //    content_type = "text/cloud-config"
-  //    content = <<EOF
-  //#cloud-config
-  //write_files:
-  //  - content: |
-  //      ${base64encode(templatefile("${path.module}/files/agent.hcl.tpl",
-  //    {
-  //      vault_endpoint      = var.vault_endpoint
-  //      tcp_listener        = "127.0.0.1:8202"
-  //      tcp_listener_tls    = false
-  //      auto_auth_type      = var.auto_auth_type
-  //      gcp_node_role       = var.gcp_node_role
-  //      gcp_service_account = var.gcp_service_account
-  //      gcp_project_id      = var.gcp_project_id
-  //      aws_node_role       = var.aws_node_role
-  //      aws_access_key      = var.aws_access_key
-  //      aws_secret_key      = var.aws_secret_key
-  //      oci_node_role       = var.oci_node_role
-  //    }
-  //))},
-  //    encoding: b64
-  //    owner: vault:vault
-  //    path: /etc/vault.d/agent.hcl
-  //    permissions: '0750'
-  //    EOF
-  //}
-
   part {
     content_type = "text/x-shellscript"
     content      = file("${path.module}/scripts/control-plane-startup.sh")

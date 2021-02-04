@@ -8,19 +8,19 @@ variable "dc_name" {
   type = string
 }
 variable "base64" {
-  type = bool
+  type    = bool
   default = true
 }
 variable "gzip" {
-  type = bool
+  type    = bool
   default = true
 }
 variable "auto_auth_type" {
   type    = string
   default = ""
   validation {
-    condition     = contains(toset(["aws", "oci", "gcp", "approle"]), var.auto_auth_type)
-    error_message = "Unsupported auto_auth_type value. Supported values: gcp, oci, approle, aws."
+    condition     = contains(toset(["aws", "oci", "gcp", "approle", "azure"]), var.auto_auth_type)
+    error_message = "Unsupported auto_auth_type value. Supported values: gcp, oci, approle, aws, azure."
   }
 }
 
@@ -59,4 +59,15 @@ variable "aws_secret_key" {
   type        = string
   default     = null
   description = "(optional) Static AWS Secret Key credential for authentication"
+}
+
+variable "azure_node_role" {
+  type        = string
+  default     = null
+  description = "(optional) Configured Azure role of the node"
+}
+variable "azure_resource" {
+  type        = string
+  default     = null
+  description = "(optional) A configured Azure AD application which is used as the resource for generating MSI access tokens"
 }

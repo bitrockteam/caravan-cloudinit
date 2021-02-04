@@ -52,6 +52,14 @@ auto_auth {
     }
   }
 %{ endif }
+%{ if auto_auth_type == "azure" }
+  method "azure" {
+    config = {
+      role="${azure_node_role}"
+      resource="${azure_resource}"
+    }
+  }
+%{ endif }
   sink {
     type = "file"
     config = {

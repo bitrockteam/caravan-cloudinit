@@ -28,8 +28,8 @@ plugin "docker" {
 
     auth {
       config = "/root/.docker/config.json"
-      %{ if auto_auth_type == "gcp"}helper = "gcloud"%{ endif }
-      %{ if auto_auth_type == "aws"}helper = "ecr-login"%{ endif }
+      %{ if cloud == "gcp"}helper = "gcloud"%{ endif }
+      %{ if cloud == "aws"}helper = "ecr-login"%{ endif }
     }
 
     gc {

@@ -24,14 +24,6 @@ plugin "raw_exec" {
 
 plugin "docker" {
   config {
-    endpoint = "unix:///var/run/docker.sock"
-
-    auth {
-      config = "/root/.docker/config.json"
-      %{ if cloud == "gcp"}helper = "gcloud"%{ endif }
-      %{ if cloud == "aws"}helper = "ecr-login"%{ endif }
-    }
-
     gc {
       image  = false
       dangling_containers {

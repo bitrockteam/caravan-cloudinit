@@ -9,10 +9,20 @@ data "cloudinit_config" "control_plane" {
   }
 }
 
-data "cloudinit_config" "worker_plane" {
+data "cloudinit_config" "worker_plane_startup_script" {
   gzip          = var.gzip
   base64_encode = var.base64
 
+  part {
+    content_type = "text/x-shellscript"
+    content      = file("${path.module}/scripts/worker-plane-startup.sh")
+    filename     = "startup-script.sh"
+  }
+}
+
+data "cloudinit_config" "worker_plane" {
+  gzip          = var.gzip
+  base64_encode = var.base64
 
   part {
     content_type = "text/cloud-config"
@@ -128,11 +138,5 @@ write_files:
     path: /etc/nomad.d/nomad_keyfile.tmpl
     permissions: '0750'
 EOF
-}
-
-part {
-  content_type = "text/x-shellscript"
-  content      = file("${path.module}/scripts/worker-plane-startup.sh")
-  filename     = "startup-script.sh"
-}
+  }
 }

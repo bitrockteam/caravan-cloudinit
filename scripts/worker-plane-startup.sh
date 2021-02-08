@@ -6,12 +6,6 @@ systemctl restart consul && \
 systemctl restart nomad
 
 if [[ `hostname` == monitoring* ]]; then
-    export ELASTIC_SERVICE=$(curl -s -H 'Metadata-Flavor: Google' http://metadata.google.internal/computeMetadata/v1/instance/attributes/elastic-service) \
-        GRAFANA_SERVICE=$(curl -s -H 'Metadata-Flavor: Google' http://metadata.google.internal/computeMetadata/v1/instance/attributes/grafana-service)
-        PROMETHEUS_SERVICE=$(curl -s -H 'Metadata-Flavor: Google' http://metadata.google.internal/computeMetadata/v1/instance/attributes/prometheus-service)
-    curl -o /etc/consul.d/elastic-service.json -s -L -H "Authorization: Bearer $TOKEN" $ELASTIC_SERVICE && \
-    curl -o /etc/consul.d/grafana-service.json -s -L -H "Authorization: Bearer $TOKEN" $GRAFANA_SERVICE && \
-    curl -o /etc/consul.d/prometheus-service.json -s -L -H "Authorization: Bearer $TOKEN" $PROMETHEUS_SERVICE && \
     sudo sysctl -w vm.max_map_count=262144 && \
     sudo systemctl enable prometheus && \
     sudo systemctl start prometheus && \

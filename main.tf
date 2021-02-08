@@ -69,6 +69,24 @@ write_files:
     path: /etc/consul.d/cert.tmpl
     permissions: '0750'
   - content: |
+      ${base64encode(file("${path.module}/files/elastic-service.json"))},
+    encoding: b64
+    owner: vault:certsreaders
+    path: /etc/consul.d/elastic-service.json
+    permissions: '0750'
+  - content: |
+      ${base64encode(file("${path.module}/files/grafana-service.json"))},
+    encoding: b64
+    owner: vault:certsreaders
+    path: /etc/consul.d/grafana-service.json
+    permissions: '0750'
+  - content: |
+      ${base64encode(file("${path.module}/files/prometheus-service.json"))},
+    encoding: b64
+    owner: vault:certsreaders
+    path: /etc/consul.d/prometheus-service.json
+    permissions: '0750'
+  - content: |
       ${base64encode(templatefile("${path.module}/files/keyfile.tmpl",
     {
       dc_name = var.dc_name

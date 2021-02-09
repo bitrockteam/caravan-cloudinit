@@ -7,6 +7,10 @@ variable "vault_endpoint" {
 variable "dc_name" {
   type = string
 }
+variable "nodeType" {
+  type = string
+  default = "worker"
+}
 variable "base64" {
   type    = bool
   default = true

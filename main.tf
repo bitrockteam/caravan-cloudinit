@@ -93,8 +93,8 @@ write_files:
     {
       cluster_nodes     = var.cluster_nodes,
       dc_name           = var.dc_name
-      envoy_proxy_image = "envoyproxy/envoy:v1.16-latest"
       cloud             = var.auto_auth_type
+      nodeType          = var.nodeType
     }
 ))},
     encoding: b64
@@ -196,8 +196,8 @@ write_files:
     {
       cluster_nodes     = var.cluster_nodes,
       dc_name           = var.dc_name
-      envoy_proxy_image = "envoyproxy/envoy:v1.16-latest"
       cloud             = var.auto_auth_type
+      nodeType          = "monitoring"
     }
 ))},
     encoding: b64

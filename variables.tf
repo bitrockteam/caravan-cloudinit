@@ -8,7 +8,7 @@ variable "dc_name" {
   type = string
 }
 variable "nodeType" {
-  type = string
+  type    = string
   default = "worker"
 }
 variable "base64" {

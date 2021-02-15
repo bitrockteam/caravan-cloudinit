@@ -91,10 +91,10 @@ write_files:
   - content: |
       ${base64encode(templatefile("${path.module}/files/nomad-client.hcl.tmpl",
     {
-      cluster_nodes     = var.cluster_nodes,
-      dc_name           = var.dc_name
-      cloud             = var.auto_auth_type
-      nodeType          = var.nodeType
+      cluster_nodes = var.cluster_nodes,
+      dc_name       = var.dc_name
+      cloud         = var.auto_auth_type
+      nodeType      = var.nodeType
     }
 ))},
     encoding: b64
@@ -120,7 +120,7 @@ write_files:
     path: /etc/nomad.d/nomad_keyfile.tmpl
     permissions: '0750'
 EOF
-  }
+}
 }
 
 data "cloudinit_config" "monitoring" {
@@ -194,10 +194,10 @@ write_files:
   - content: |
       ${base64encode(templatefile("${path.module}/files/nomad-client.hcl.tmpl",
     {
-      cluster_nodes     = var.cluster_nodes,
-      dc_name           = var.dc_name
-      cloud             = var.auto_auth_type
-      nodeType          = "monitoring"
+      cluster_nodes = var.cluster_nodes,
+      dc_name       = var.dc_name
+      cloud         = var.auto_auth_type
+      nodeType      = "monitoring"
     }
 ))},
     encoding: b64
@@ -240,6 +240,15 @@ write_files:
     owner: vault:certsreaders
     path: /etc/consul.d/prometheus-service.json
     permissions: '0750'
+
+runcmd:
+  - sudo sysctl -w vm.max_map_count=262144
+  - sudo systemctl enable prometheus
+  - sudo systemctl start prometheus
+  - sudo systemctl enable elasticsearch
+  - sudo systemctl start elasticsearch
+  - sudo systemctl enable grafana-server
+  - sudo systemctl start grafana-server
 EOF
-  }
+}
 }

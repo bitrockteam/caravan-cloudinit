@@ -4,7 +4,7 @@ log_level = "DEBUG"
 client {
   enabled = true
   options {
-    "user.blacklist"            = "ubuntu"
+    "user.blacklist" = "centos,ubuntu"
   }
   meta {
     "nodeType" = "${nodeType}"
@@ -35,6 +35,9 @@ plugin "docker" {
         period         = "5m"
         creation_grace = "5m"
       }
+    }
+    volumes {
+       enabled = ${docker_volume_enable}
     }
     allow_privileged = true
   }
@@ -85,5 +88,5 @@ telemetry {
   disable_hostname = true
   prometheus_metrics = true
   publish_allocation_metrics = true
-  publish_node_metrics = true
+  publish_node_metrics = false
 }

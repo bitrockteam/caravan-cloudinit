@@ -11,6 +11,11 @@ variable "nodeType" {
   type    = string
   default = "worker"
 }
+variable "docker_volume_enable" {
+  type        = bool
+  default     = false
+  description = "Allow mounting host paths outside of the allocation working directory"
+}
 variable "base64" {
   type    = bool
   default = true

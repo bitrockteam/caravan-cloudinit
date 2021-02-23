@@ -40,6 +40,7 @@ No Modules.
 | gcp\_project\_id | (optional) The GCP Project ID | `string` | `null` | no |
 | gcp\_service\_account | (optional) Configured GCP service account | `string` | `null` | no |
 | gzip | n/a | `bool` | `true` | no |
+| host\_volumes | Define a list of host\_volume to make volumes available to jobs | `list(map(string))` | `[]` | no |
 | nodeType | n/a | `string` | `"worker"` | no |
 | oci\_node\_role | (optional) Configured OCI role of the node | `string` | `null` | no |
 

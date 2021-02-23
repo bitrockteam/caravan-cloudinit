@@ -9,6 +9,12 @@ client {
   meta {
     "nodeType" = "${nodeType}"
   }
+   %{ for host_volume in "${host_volumes}" ~}
+  host_volume "${host_volume["name"]}" {
+    path = "${host_volume["path"]}"
+    read_only = "${host_volume["read_only"]}"
+  }
+  %{ endfor ~}
 }
 
 server_join {

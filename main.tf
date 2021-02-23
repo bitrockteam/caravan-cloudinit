@@ -91,11 +91,12 @@ write_files:
   - content: |
       ${base64encode(templatefile("${path.module}/files/nomad-client.hcl.tmpl",
     {
-      cluster_nodes        = var.cluster_nodes,
+      cluster_nodes        = var.cluster_nodes
       dc_name              = var.dc_name
       cloud                = var.auto_auth_type
       nodeType             = var.nodeType
       docker_volume_enable = var.docker_volume_enable
+      host_volumes         = var.host_volumes
     }
 ))},
     encoding: b64
@@ -195,10 +196,12 @@ write_files:
   - content: |
       ${base64encode(templatefile("${path.module}/files/nomad-client.hcl.tmpl",
     {
-      cluster_nodes = var.cluster_nodes,
-      dc_name       = var.dc_name
-      cloud         = var.auto_auth_type
-      nodeType      = "monitoring"
+      cluster_nodes        = var.cluster_nodes
+      dc_name              = var.dc_name
+      cloud                = var.auto_auth_type
+      nodeType             = "monitoring"
+      docker_volume_enable = var.docker_volume_enable
+      host_volumes         = var.host_volumes
     }
 ))},
     encoding: b64

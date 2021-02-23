@@ -16,6 +16,11 @@ variable "docker_volume_enable" {
   default     = false
   description = "Allow mounting host paths outside of the allocation working directory"
 }
+variable "host_volumes" {
+  type        = list(map(string))
+  default     = []
+  description = "Define a list of host_volume to make volumes available to jobs"
+}
 variable "base64" {
   type    = bool
   default = true

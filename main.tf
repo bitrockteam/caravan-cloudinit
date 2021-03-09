@@ -28,6 +28,9 @@ data "cloudinit_config" "worker_plane" {
     content_type = "text/cloud-config"
     content = <<EOF
 #cloud-config
+ntp:
+  enabled: true
+  ntp_client: chrony
 write_files:
   - content: |
       ${base64encode(templatefile("${path.module}/files/agent.hcl.tpl",
@@ -121,6 +124,10 @@ write_files:
     owner: vault:certsreaders
     path: /etc/nomad.d/nomad_keyfile.tmpl
     permissions: '0750'
+
+runcmd:
+  - sudo systemctl enable chrony
+  - sudo systemctl start chrony
 EOF
 }
 }
@@ -133,6 +140,9 @@ data "cloudinit_config" "monitoring" {
     content_type = "text/cloud-config"
     content = <<EOF
 #cloud-config
+ntp:
+  enabled: true
+  ntp_client: chrony
 write_files:
   - content: |
       ${base64encode(templatefile("${path.module}/files/agent.hcl.tpl",
@@ -247,6 +257,8 @@ write_files:
 
 runcmd:
   - sudo sysctl -w vm.max_map_count=262144
+  - sudo systemctl enable chrony
+  - sudo systemctl start chrony
   - sudo systemctl enable prometheus
   - sudo systemctl start prometheus
   - sudo systemctl enable elasticsearch

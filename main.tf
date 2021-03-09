@@ -126,8 +126,8 @@ write_files:
     permissions: '0750'
 
 runcmd:
-  - sudo systemctl enable chrony
-  - sudo systemctl start chrony
+  - sudo systemctl enable chronyd
+  - sudo systemctl start chronyd
 EOF
 }
 }
@@ -257,8 +257,8 @@ write_files:
 
 runcmd:
   - sudo sysctl -w vm.max_map_count=262144
-  - sudo systemctl enable chrony
-  - sudo systemctl start chrony
+  - sudo systemctl enable chronyd
+  - sudo systemctl start chronyd
   - sudo systemctl enable prometheus
   - sudo systemctl start prometheus
   - sudo systemctl enable elasticsearch

@@ -85,3 +85,9 @@ variable "azure_resource" {
   default     = "https://management.azure.com/"
   description = "(optional) A configured Azure AD application which is used as the resource for generating MSI access tokens"
 }
+
+variable "persistent_device" {
+  type        = string
+  default     = ""
+  description = "Device where to persist caravan data"
+}

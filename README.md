@@ -46,6 +46,7 @@ No modules.
 | <a name="input_host_volumes"></a> [host\_volumes](#input\_host\_volumes) | Define a list of host\_volume to make volumes available to jobs | `list(map(string))` | `[]` | no |
 | <a name="input_nodeType"></a> [nodeType](#input\_nodeType) | n/a | `string` | `"worker"` | no |
 | <a name="input_oci_node_role"></a> [oci\_node\_role](#input\_oci\_node\_role) | (optional) Configured OCI role of the node | `string` | `null` | no |
+| <a name="input_persistent_device"></a> [persistent\_device](#input\_persistent\_device) | Device where to persist caravan data | `string` | `""` | no |
 
 ## Outputs
 

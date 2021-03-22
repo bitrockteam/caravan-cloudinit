@@ -1,0 +1,23 @@
+#cloud-config
+
+%{ if persistent_device != "" }%
+device_aliases:
+  caravan_data: ${persistent_device}
+disk_setup:
+  caravan_data:
+    table_type: gpt
+    layout: True
+    overwrite: False
+fs_setup:
+  - device: caravan_data
+    partition: 1
+    filesystem: ext4
+mounts:
+  - [ "caravan_data.1", "/etc/caravan", "auto", "defaults,nofail,x-systemd.requires=cloud-init.service" ]
+%{ endif }‰
+
+run_cmd:
+  - sudo systemctl enable nomad-watcher.path
+  - sudo systemctl enable nomad-watcher.service
+  - sudo systemctl start nomad-watcher.path
+  - sudo systemctl start nomad-watcher.service

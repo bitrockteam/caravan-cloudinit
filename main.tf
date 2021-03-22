@@ -3,9 +3,10 @@ data "cloudinit_config" "control_plane" {
   base64_encode = var.base64
 
   part {
-    content_type = "text/x-shellscript"
-    content      = file("${path.module}/scripts/control-plane-startup.sh")
-    filename     = "startup-script.sh"
+    content_type = "text/cloud-config"
+    content = templatefile("${path.module}/templates/cloud-init-control-plane.yaml.tmpl", {
+      persistent_device = var.persistent_device
+    })
   }
 }
 

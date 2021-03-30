@@ -8,6 +8,7 @@ data "cloudinit_config" "control_plane" {
       vault_persistent_device  = var.vault_persistent_device
       consul_persistent_device = var.consul_persistent_device
       nomad_persistent_device  = var.nomad_persistent_device
+      disk_init_script         = base64encode(file("${path.module}/files/disk-init.sh"))
     })
   }
 }

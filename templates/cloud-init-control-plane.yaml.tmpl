@@ -62,14 +62,14 @@ mounts:
 
 write_files:
   - content: |
-      ${base64encode(file("${path.module}/files/disk-init.sh"))
+      ${disk_init_script}
     encoding: b64
     owner: root:root
     path: /etc/disk-init.sh
     permissions: '0755'
 
 run_cmd:
-  - sudo /etc/disk-init.sh
+  - sudo VAULT_DEVICE="${vault_persistent_device}" CONSUL_DEVICE="${consul_persistent_device}" NOMAD_DEVICE="${nomad_persistent_device}" /etc/disk-init.sh
   - sudo systemctl enable nomad-watcher.path
   - sudo systemctl enable nomad-watcher.service
   - sudo systemctl start nomad-watcher.path

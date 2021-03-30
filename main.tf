@@ -5,7 +5,9 @@ data "cloudinit_config" "control_plane" {
   part {
     content_type = "text/cloud-config"
     content = templatefile("${path.module}/templates/cloud-init-control-plane.yaml.tmpl", {
-      persistent_device = var.persistent_device
+      vault_persistent_device  = var.vault_persistent_device
+      consul_persistent_device = var.consul_persistent_device
+      nomad_persistent_device  = var.nomad_persistent_device
     })
   }
 }

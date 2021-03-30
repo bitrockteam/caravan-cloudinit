@@ -86,8 +86,20 @@ variable "azure_resource" {
   description = "(optional) A configured Azure AD application which is used as the resource for generating MSI access tokens"
 }
 
-variable "persistent_device" {
+variable "vault_persistent_device" {
   type        = string
   default     = ""
-  description = "Device where to persist caravan data"
+  description = "Device where to persist Caravan Vault data and configs"
+}
+
+variable "consul_persistent_device" {
+  type        = string
+  default     = ""
+  description = "Device where to persist Caravan Consul data and configs"
+}
+
+variable "nomad_persistent_device" {
+  type        = string
+  default     = ""
+  description = "Device where to persist Caravan Nomad data and configs"
 }

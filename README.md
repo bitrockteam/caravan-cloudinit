@@ -28,6 +28,7 @@ No modules.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
+<<<<<<< HEAD
 | <a name="input_cluster_nodes"></a> [cluster\_nodes](#input\_cluster\_nodes) | n/a | `map(any)` | n/a | yes |
 | <a name="input_dc_name"></a> [dc\_name](#input\_dc\_name) | n/a | `string` | n/a | yes |
 | <a name="input_vault_endpoint"></a> [vault\_endpoint](#input\_vault\_endpoint) | n/a | `string` | n/a | yes |
@@ -47,6 +48,29 @@ No modules.
 | <a name="input_nodeType"></a> [nodeType](#input\_nodeType) | n/a | `string` | `"worker"` | no |
 | <a name="input_oci_node_role"></a> [oci\_node\_role](#input\_oci\_node\_role) | (optional) Configured OCI role of the node | `string` | `null` | no |
 | <a name="input_persistent_device"></a> [persistent\_device](#input\_persistent\_device) | Device where to persist caravan data | `string` | `""` | no |
+=======
+| cluster\_nodes | n/a | `map(any)` | n/a | yes |
+| dc\_name | n/a | `string` | n/a | yes |
+| vault\_endpoint | n/a | `string` | n/a | yes |
+| auto\_auth\_type | n/a | `string` | `""` | no |
+| aws\_access\_key | (optional) Static AWS Access Key credential for authentication | `string` | `null` | no |
+| aws\_node\_role | (optional) Configured AWS role of the node | `string` | `null` | no |
+| aws\_secret\_key | (optional) Static AWS Secret Key credential for authentication | `string` | `null` | no |
+| azure\_node\_role | (optional) Configured Azure role of the node | `string` | `null` | no |
+| azure\_resource | (optional) A configured Azure AD application which is used as the resource for generating MSI access tokens | `string` | `"https://management.azure.com/"` | no |
+| base64 | n/a | `bool` | `true` | no |
+| consul\_persistent\_device | Device where to persist Caravan Consul data and configs | `string` | `""` | no |
+| docker\_volume\_enable | Allow mounting host paths outside of the allocation working directory | `bool` | `false` | no |
+| gcp\_node\_role | (optional) Configured GCP role of the node | `string` | `null` | no |
+| gcp\_project\_id | (optional) The GCP Project ID | `string` | `null` | no |
+| gcp\_service\_account | (optional) Configured GCP service account | `string` | `null` | no |
+| gzip | n/a | `bool` | `true` | no |
+| host\_volumes | Define a list of host\_volume to make volumes available to jobs | `list(map(string))` | `[]` | no |
+| nodeType | n/a | `string` | `"worker"` | no |
+| nomad\_persistent\_device | Device where to persist Caravan Nomad data and configs | `string` | `""` | no |
+| oci\_node\_role | (optional) Configured OCI role of the node | `string` | `null` | no |
+| vault\_persistent\_device | Device where to persist Caravan Vault data and configs | `string` | `""` | no |
+>>>>>>> b41c21c (Multiple disk)
 
 ## Outputs
 

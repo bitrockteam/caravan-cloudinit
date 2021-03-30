@@ -1,22 +1,64 @@
 #cloud-config
 
-%{ if persistent_device != "" }%
 device_aliases:
-  caravan_data: ${persistent_device}
+%{ if vault_persistent_device != "" }%
+  vault_data: ${vault_persistent_device}
+%{ endif }%
+%{ if consul_persistent_device != "" }%
+  consul_data: ${consul_persistent_device}
+%{ endif }%
+%{ if nomad_persistent_device != "" }%
+  nomad_data: ${nomad_persistent_device}
+%{ endif }%
 disk_setup:
-  caravan_data:
+%{ if vault_persistent_device != "" }%
+  vault_data:
     table_type: gpt
     layout: True
     overwrite: False
+%{ endif }%
+%{ if consul_persistent_device != "" }%
+  consul_data:
+    table_type: gpt
+    layout: True
+    overwrite: False
+%{ endif }%
+%{ if nomad_persistent_device != "" }%
+  nomad_data:
+    table_type: gpt
+    layout: True
+    overwrite: False
+%{ endif }%
 fs_setup:
-  - device: caravan_data
+%{ if vault_persistent_device != "" }%
+  - device: vault_data
     partition: 1
     filesystem: ext4
+%{ endif }%
+%{ if consul_persistent_device != "" }%
+  - device: consul_data
+    partition: 1
+    filesystem: ext4
+%{ endif }%
+%{ if nomad_persistent_device != "" }%
+  - device: nomad_data
+    partition: 1
+    filesystem: ext4
+%{ endif }%
 mounts:
-  - [ "caravan_data.1", "/etc/caravan", "auto", "defaults,nofail,x-systemd.requires=cloud-init.service" ]
+%{ if vault_persistent_device != "" }%
+  - [ "vault_data.1", "/etc/vault.d", "auto", "defaults,nofail,x-systemd.requires=cloud-init.service" ]
+%{ endif }‰
+%{ if consul_persistent_device != "" }%
+  - [ "consul_data.1", "/etc/consul.d", "auto", "defaults,nofail,x-systemd.requires=cloud-init.service" ]
+%{ endif }‰
+%{ if nomad_persistent_device != "" }%
+  - [ "nomad_data.1", "/etc/nomad.d", "auto", "defaults,nofail,x-systemd.requires=cloud-init.service" ]
 %{ endif }‰
 
 run_cmd:
+# todo: when the persistent disk are empty, it means its the first time we are running the system
+#  we need to copy data previously in those folders
   - sudo systemctl enable nomad-watcher.path
   - sudo systemctl enable nomad-watcher.service
   - sudo systemctl start nomad-watcher.path

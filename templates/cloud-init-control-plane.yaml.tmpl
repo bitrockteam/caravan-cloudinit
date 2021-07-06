@@ -4,69 +4,75 @@ ntp:
   enabled: true
   ntp_client: chrony
 
-device_aliases:
-%{ if vault_persistent_device != "" }%
-  vault_data: ${vault_persistent_device}
-%{ endif }%
-%{ if consul_persistent_device != "" }%
-  consul_data: ${consul_persistent_device}
-%{ endif }%
-%{ if nomad_persistent_device != "" }%
-  nomad_data: ${nomad_persistent_device}
-%{ endif }%
-disk_setup:
-%{ if vault_persistent_device != "" }%
-  vault_data:
-    table_type: gpt
-    layout: True
-    overwrite: False
-%{ endif }%
-%{ if consul_persistent_device != "" }%
-  consul_data:
-    table_type: gpt
-    layout: True
-    overwrite: False
-%{ endif }%
-%{ if nomad_persistent_device != "" }%
-  nomad_data:
-    table_type: gpt
-    layout: True
-    overwrite: False
-%{ endif }%
-fs_setup:
-%{ if vault_persistent_device != "" }%
-  - device: vault_data
-    partition: 1
-    filesystem: ext4
-%{ endif }%
-%{ if consul_persistent_device != "" }%
-  - device: consul_data
-    partition: 1
-    filesystem: ext4
-%{ endif }%
-%{ if nomad_persistent_device != "" }%
-  - device: nomad_data
-    partition: 1
-    filesystem: ext4
-%{ endif }%
-mounts:
-%{ if vault_persistent_device != "" }%
-  - [ "vault_data.1", "/etc/vault.d", "auto", "defaults,nofail,x-systemd.requires=cloud-init.service" ]
-%{ endif }‰
-%{ if consul_persistent_device != "" }%
-  - [ "consul_data.1", "/etc/consul.d", "auto", "defaults,nofail,x-systemd.requires=cloud-init.service" ]
-%{ endif }‰
-%{ if nomad_persistent_device != "" }%
-  - [ "nomad_data.1", "/etc/nomad.d", "auto", "defaults,nofail,x-systemd.requires=cloud-init.service" ]
-%{ endif }‰
-
-write_files:
-  - content: |
-      ${disk_init_script}
-    encoding: b64
-    owner: root:root
-    path: /etc/disk-init.sh
-    permissions: '0755'
+bootcmd:
+%{ if vault_persistent_device != "" ~}
+    - mkdir -p ${vault_home}
+    - while [ ! -b $(readlink -f ${vault_persistent_device}) ]; do echo "waiting for device ${vault_persistent_device}"; lsblk; echo "$(readlink -f ${vault_persistent_device})"; sleep 5 ; done
+    - while [ ! -b $(readlink -f ${vault_persistent_device})p1 ]; do echo "waiting for partition $(readlink -f ${vault_persistent_device})p1"; lsblk; sleep 5 ; blkid $(readlink -f ${vault_persistent_device})p1 || (echo n; echo p; echo 1; echo 2048; echo +512M; sleep 5; echo w) | fdisk $(readlink -f ${vault_persistent_device}); done
+    - while [ ! -b $(readlink -f ${vault_persistent_device})p2 ]; do echo "waiting for partition $(readlink -f ${vault_persistent_device})p2"; lsblk; sleep 5 ; blkid $(readlink -f ${vault_persistent_device})p2 || (echo n; echo p; echo 2; echo 1050624; echo +512M; sleep 5; echo w) | fdisk $(readlink -f ${vault_persistent_device}); done
+    - parted -s $(readlink -f ${vault_persistent_device}) "resizepart 2 -1" quit
+    - while [ ! -b $(readlink -f ${vault_persistent_device})p2 ]; do echo "waiting for partition $(readlink -f ${vault_persistent_device})p2"; lsblk; sleep 5 ; done
+    - while [ "$(blkid -o value -s TYPE $(readlink -f  ${vault_persistent_device})p1)" != "ext4" ]; do mkfs -t ext4 $(readlink -f ${vault_persistent_device})p1; sleep 5 ; done
+    - while [ "$(blkid -o value -s TYPE $(readlink -f  ${vault_persistent_device})p2)" != "xfs" ]; do mkfs -t xfs $(readlink -f ${vault_persistent_device})p2; sleep 5 ; done
+    - e2label $(readlink -f ${vault_persistent_device})p1 vault-conf
+    - xfs_admin -L "vault-data" $(readlink -f ${vault_persistent_device})p2
+    - sed  -e '/^[\/][^ \t]*[ \t]*${vault_home_escaped}[ \t]/d' /etc/fstab
+    - grep -q ^LABEL=vault-conf /etc/fstab || echo 'LABEL=vault-conf ${vault_home} ext4 defaults' >> /etc/fstab
+    - grep -q "^$(readlink -f ${vault_persistent_device})p1 ${vault_home} " /proc/mounts || mount ${vault_home}
+    - chown vault:certsreaders -R ${vault_home}
+    - sed  -e '/^[\/][^ \t]*[ \t]*${vault_data_escaped}[ \t]/d' /etc/fstab
+    - grep -q ^LABEL=vault-data /etc/fstab || echo 'LABEL=vault-data ${vault_data} xfs defaults' >> /etc/fstab
+    - grep -q "^$(readlink -f ${vault_persistent_device})p2 ${vault_data} " /proc/mounts || mount ${vault_data}
+    - xfs_growfs ${vault_data}
+    - chown vault:certsreaders -R ${vault_home}
+    - mkdir -p ${vault_data}/storage
+    - chown vault:vault ${vault_data}
+    - chown vault:vault ${vault_data}/storage
+%{ endif ~}
+%{ if consul_persistent_device != "" ~}
+    - mkdir -p ${consul_home}
+    - while [ ! -b $(readlink -f ${consul_persistent_device}) ]; do echo "waiting for device ${consul_persistent_device}"; lsblk; echo "$(readlink -f ${consul_persistent_device})"; sleep 5 ; done
+    - while [ ! -b $(readlink -f ${consul_persistent_device})p1 ]; do echo "waiting for partition $(readlink -f ${consul_persistent_device})p1"; lsblk; sleep 5 ; blkid $(readlink -f ${consul_persistent_device})p1 || (echo n; echo p; echo 1; echo 2048; echo +512M; sleep 5; echo w) | fdisk $(readlink -f ${consul_persistent_device}); done
+    - while [ ! -b $(readlink -f ${consul_persistent_device})p2 ]; do echo "waiting for partition $(readlink -f ${consul_persistent_device})p2"; lsblk; sleep 5 ; blkid $(readlink -f ${consul_persistent_device})p2 || (echo n; echo p; echo 2; echo 1050624; echo +512M; sleep 5; echo w) | fdisk $(readlink -f ${consul_persistent_device}); done
+    - parted -s $(readlink -f ${consul_persistent_device}) "resizepart 2 -1" quit
+    - while [ ! -b $(readlink -f ${consul_persistent_device})p2 ]; do echo "waiting for partition $(readlink -f ${consul_persistent_device})p2"; lsblk; sleep 5 ; done
+    - while [ "$(blkid -o value -s TYPE $(readlink -f  ${consul_persistent_device})p1)" != "ext4" ]; do mkfs -t ext4 $(readlink -f ${consul_persistent_device})p1; sleep 5 ; done
+    - while [ "$(blkid -o value -s TYPE $(readlink -f  ${consul_persistent_device})p2)" != "xfs" ]; do mkfs -t xfs $(readlink -f ${consul_persistent_device})p2; sleep 5 ; done
+    - e2label $(readlink -f ${consul_persistent_device})p1 consul-conf
+    - xfs_admin -L "consul-data" $(readlink -f ${consul_persistent_device})p2
+    - sed  -e '/^[\/][^ \t]*[ \t]*${consul_home_escaped}[ \t]/d' /etc/fstab
+    - grep -q ^LABEL=consul-conf /etc/fstab || echo 'LABEL=consul-conf ${consul_home} ext4 defaults' >> /etc/fstab
+    - grep -q "^$(readlink -f ${consul_persistent_device})p1 ${consul_home} " /proc/mounts || mount ${consul_home}
+    - chown consul:certsreaders -R ${consul_home}
+    - sed  -e '/^[\/][^ \t]*[ \t]*${consul_data_escaped}[ \t]/d' /etc/fstab
+    - grep -q ^LABEL=consul-data /etc/fstab || echo 'LABEL=consul-data ${consul_data} xfs defaults' >> /etc/fstab
+    - grep -q "^$(readlink -f ${consul_persistent_device})p2 ${consul_data} " /proc/mounts || mount ${consul_data}
+    - xfs_growfs ${consul_data}
+    - chown consul:certsreaders -R ${consul_home}
+    - chown consul:consul ${consul_data}
+%{ endif ~}
+%{ if nomad_persistent_device != "" ~}
+    - mkdir -p ${nomad_home}
+    - while [ ! -b $(readlink -f ${nomad_persistent_device}) ]; do echo "waiting for device ${nomad_persistent_device}"; lsblk; echo "$(readlink -f ${nomad_persistent_device})"; sleep 5 ; done
+    - while [ ! -b $(readlink -f ${nomad_persistent_device})p1 ]; do echo "waiting for partition $(readlink -f ${nomad_persistent_device})p1"; lsblk; sleep 5 ; blkid $(readlink -f ${nomad_persistent_device})p1 || (echo n; echo p; echo 1; echo 2048; echo +512M; sleep 5; echo w) | fdisk $(readlink -f ${nomad_persistent_device}); done
+    - while [ ! -b $(readlink -f ${nomad_persistent_device})p2 ]; do echo "waiting for partition $(readlink -f ${nomad_persistent_device})p2"; lsblk; sleep 5 ; blkid $(readlink -f ${nomad_persistent_device})p2 || (echo n; echo p; echo 2; echo 1050624; echo +512M; sleep 5; echo w) | fdisk $(readlink -f ${nomad_persistent_device}); done
+    - parted -s $(readlink -f ${nomad_persistent_device}) "resizepart 2 -1" quit
+    - while [ ! -b $(readlink -f ${nomad_persistent_device})p2 ]; do echo "waiting for partition $(readlink -f ${nomad_persistent_device})p2"; lsblk; sleep 5 ; done
+    - while [ "$(blkid -o value -s TYPE $(readlink -f  ${nomad_persistent_device})p1)" != "ext4" ]; do mkfs -t ext4 $(readlink -f ${nomad_persistent_device})p1; sleep 5 ; done
+    - while [ "$(blkid -o value -s TYPE $(readlink -f  ${nomad_persistent_device})p2)" != "xfs" ]; do mkfs -t xfs $(readlink -f ${nomad_persistent_device})p2; sleep 5 ; done
+    - e2label $(readlink -f ${nomad_persistent_device})p1 nomad-conf
+    - xfs_admin -L "nomad-data" $(readlink -f ${nomad_persistent_device})p2
+    - sed  -e '/^[\/][^ \t]*[ \t]*${nomad_home_escaped}[ \t]/d' /etc/fstab
+    - grep -q ^LABEL=nomad-conf /etc/fstab || echo 'LABEL=nomad-conf ${nomad_home} ext4 defaults' >> /etc/fstab
+    - grep -q "^$(readlink -f ${nomad_persistent_device})p1 ${nomad_home} " /proc/mounts || mount ${nomad_home}
+    - chown nomad:certsreaders -R ${nomad_home}
+    - sed  -e '/^[\/][^ \t]*[ \t]*${nomad_data_escaped}[ \t]/d' /etc/fstab
+    - grep -q ^LABEL=nomad-data /etc/fstab || echo 'LABEL=nomad-data ${nomad_data} xfs defaults' >> /etc/fstab
+    - grep -q "^$(readlink -f ${nomad_persistent_device})p2 ${nomad_data} " /proc/mounts || mount ${nomad_data}
+    - xfs_growfs ${nomad_data}
+    - chown nomad:certsreaders -R ${nomad_home}
+    - chown nomad:nomad ${nomad_data}
+%{ endif ~}
 
 run_cmd:
   - sudo VAULT_DEVICE="${vault_persistent_device}" CONSUL_DEVICE="${consul_persistent_device}" NOMAD_DEVICE="${nomad_persistent_device}" /etc/disk-init.sh

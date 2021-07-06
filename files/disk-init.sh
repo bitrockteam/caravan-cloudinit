@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-# todo: when the persistent disk are empty, it means its the first time we are running the system
-#  we need to copy data previously in those folders
-
 move_data() {
   device=$1
   mount=$2
@@ -36,11 +33,13 @@ sudo mount --bind / /mnt/root
 
 shopt -s dotglob nullglob
 
-# todo: we need to eb sure that at this point the devices either does not exist, or has already been mounted
-
 move_data "$VAULT_DEVICE" "/etc/vault.d/" "vault,vault-agent"
 move_data "$CONSUL_DEVICE" "/etc/consul.d/" "consul"
 move_data "$NOMAD_DEVICE" "/etc/nomad.d/" "nomad"
+
+move_data "$VAULT_DEVICE" "/var/lib/vault/" "vault,vault-agent"
+move_data "$CONSUL_DEVICE" "/var/lib/consul/" "consul"
+move_data "$NOMAD_DEVICE" "/var/lib/nomad/" "nomad"
 
 sudo umount /mnt/root
 echo "Done preparing persistent data"

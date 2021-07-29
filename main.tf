@@ -3,9 +3,25 @@ data "cloudinit_config" "control_plane" {
   base64_encode = var.base64
 
   part {
-    content_type = "text/x-shellscript"
-    content      = file("${path.module}/scripts/control-plane-startup.sh")
-    filename     = "startup-script.sh"
+    content_type = "text/cloud-config"
+    content = templatefile("${path.module}/templates/cloud-init-control-plane.yaml.tmpl", {
+      vault_persistent_device  = var.vault_persistent_device
+      vault_home               = var.vault_home
+      vault_home_escaped       = replace(var.vault_home, "/", "\\/")
+      vault_data               = var.vault_data
+      vault_data_escaped       = replace(var.vault_data, "/", "\\/")
+      consul_persistent_device = var.consul_persistent_device
+      consul_home              = var.consul_home
+      consul_home_escaped      = replace(var.consul_home, "/", "\\/")
+      consul_data              = var.consul_data
+      consul_data_escaped      = replace(var.consul_data, "/", "\\/")
+      nomad_persistent_device  = var.nomad_persistent_device
+      nomad_home               = var.nomad_home
+      nomad_home_escaped       = replace(var.nomad_home, "/", "\\/")
+      nomad_data               = var.nomad_data
+      nomad_data_escaped       = replace(var.nomad_data, "/", "\\/")
+      partition_prefix         = var.partition_prefix
+    })
   }
 }
 

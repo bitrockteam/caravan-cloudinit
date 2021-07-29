@@ -85,3 +85,63 @@ variable "azure_resource" {
   default     = "https://management.azure.com/"
   description = "(optional) A configured Azure AD application which is used as the resource for generating MSI access tokens"
 }
+
+variable "vault_persistent_device" {
+  type        = string
+  default     = ""
+  description = "Device where to persist Caravan Vault data and configs"
+}
+
+variable "vault_home" {
+  type        = string
+  default     = "/etc/vault.d"
+  description = "Vault home directory to be mounted"
+}
+
+variable "vault_data" {
+  type        = string
+  default     = "/var/lib/vault"
+  description = "Vault data directory to be mounted"
+}
+
+variable "consul_persistent_device" {
+  type        = string
+  default     = ""
+  description = "Device where to persist Caravan Consul data and configs"
+}
+
+variable "consul_home" {
+  type        = string
+  default     = "/etc/consul.d"
+  description = "Consul home directory to be mounted"
+}
+
+variable "consul_data" {
+  type        = string
+  default     = "/var/lib/consul"
+  description = "Consul data directory to be mounted"
+}
+
+variable "nomad_persistent_device" {
+  type        = string
+  default     = ""
+  description = "Device where to persist Caravan Nomad data and configs"
+}
+
+variable "nomad_home" {
+  type        = string
+  default     = "/etc/nomad.d"
+  description = "Nomad home directory to be mounted"
+}
+
+variable "nomad_data" {
+  type        = string
+  default     = "/var/lib/nomad"
+  description = "Nomad data directory to be mounted"
+}
+
+variable "partition_prefix" {
+  type        = string
+  default     = ""
+  description = "Partition prefix. like p or empty if /dev/nvme1n1p1 or /dev/sdd1"
+}

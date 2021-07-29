@@ -139,3 +139,9 @@ variable "nomad_data" {
   default     = "/var/lib/nomad"
   description = "Nomad data directory to be mounted"
 }
+
+variable "partition_prefix" {
+  type        = string
+  default     = ""
+  description = "Partition prefix. like p or empty if /dev/nvme1n1p1 or /dev/sdd1"
+}

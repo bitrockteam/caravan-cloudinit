@@ -20,6 +20,7 @@ data "cloudinit_config" "control_plane" {
       nomad_home_escaped       = replace(var.nomad_home, "/", "\\/")
       nomad_data               = var.nomad_data
       nomad_data_escaped       = replace(var.nomad_data, "/", "\\/")
+      partition_prefix         = var.partition_prefix
     })
   }
 }

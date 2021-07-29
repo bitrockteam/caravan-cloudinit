@@ -52,6 +52,7 @@ No modules.
 | <a name="input_nomad_home"></a> [nomad\_home](#input\_nomad\_home) | Nomad home directory to be mounted | `string` | `"/etc/nomad.d"` | no |
 | <a name="input_nomad_persistent_device"></a> [nomad\_persistent\_device](#input\_nomad\_persistent\_device) | Device where to persist Caravan Nomad data and configs | `string` | `""` | no |
 | <a name="input_oci_node_role"></a> [oci\_node\_role](#input\_oci\_node\_role) | (optional) Configured OCI role of the node | `string` | `null` | no |
+| <a name="input_partition_prefix"></a> [partition\_prefix](#input\_partition\_prefix) | Partition prefix. like p or empty if /dev/nvme1n1p1 or /dev/sdd1 | `string` | `""` | no |
 | <a name="input_vault_data"></a> [vault\_data](#input\_vault\_data) | Vault data directory to be mounted | `string` | `"/var/lib/vault"` | no |
 | <a name="input_vault_home"></a> [vault\_home](#input\_vault\_home) | Vault home directory to be mounted | `string` | `"/etc/vault.d"` | no |
 | <a name="input_vault_persistent_device"></a> [vault\_persistent\_device](#input\_vault\_persistent\_device) | Device where to persist Caravan Vault data and configs | `string` | `""` | no |

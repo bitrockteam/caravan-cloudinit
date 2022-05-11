@@ -5,6 +5,7 @@ data "cloudinit_config" "control_plane" {
   part {
     content_type = "text/cloud-config"
     content = templatefile("${path.module}/templates/cloud-init-control-plane.yaml.tmpl", {
+      ssh_pub_key              = var.ssh_pub_key
       vault_persistent_device  = var.vault_persistent_device
       vault_home               = var.vault_home
       vault_home_escaped       = replace(var.vault_home, "/", "\\/")
@@ -44,6 +45,13 @@ data "cloudinit_config" "worker_plane" {
     content_type = "text/cloud-config"
     content = <<EOF
 #cloud-config
+ssh_deletekeys: false
+cloud_final_modules:
+- [ssh,always]
+%{if var.ssh_pub_key != ""~}
+ssh_authorized_keys:
+ - ${var.ssh_pub_key}
+%{endif~}
 ntp:
   enabled: true
   ntp_client: chrony

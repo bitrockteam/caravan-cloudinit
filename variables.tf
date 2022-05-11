@@ -86,6 +86,12 @@ variable "azure_resource" {
   description = "(optional) A configured Azure AD application which is used as the resource for generating MSI access tokens"
 }
 
+variable "ssh_pub_key" {
+  type        = string
+  default     = ""
+  description = "Public key to add for authorized user"
+}
+
 variable "vault_persistent_device" {
   type        = string
   default     = ""

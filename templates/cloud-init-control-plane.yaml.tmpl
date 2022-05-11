@@ -1,5 +1,14 @@
 #cloud-config
 
+ssh_deletekeys: false
+cloud_final_modules:
+- [ssh,always]
+
+%{ if ssh_pub_key != "" ~}
+ssh_authorized_keys:
+ - ${ssh_pub_key}
+%{ endif ~}
+
 ntp:
   enabled: true
   ntp_client: chrony

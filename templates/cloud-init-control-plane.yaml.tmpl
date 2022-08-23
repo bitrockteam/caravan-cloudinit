@@ -39,7 +39,7 @@ bootcmd:
   - sed  -e '/^[\/][^ \t]*[ \t]*${consul_home_escaped}[ \t]/d' /etc/fstab
   - grep -q ^LABEL=consul-conf /etc/fstab || echo 'LABEL=consul-conf ${consul_home} ext4 defaults' >> /etc/fstab
   - grep -q "^$(readlink -f ${consul_persistent_device})${partition_prefix}1 ${consul_home} " /proc/mounts || mount ${consul_home}
-  - chown consul:certsreaders -R ${consul_home}
+  - chown vault:certsreaders -R ${consul_home}
   - sed  -e '/^[\/][^ \t]*[ \t]*${consul_data_escaped}[ \t]/d' /etc/fstab
   - grep -q ^LABEL=consul-data /etc/fstab || echo 'LABEL=consul-data ${consul_data} xfs defaults' >> /etc/fstab
   - grep -q "^$(readlink -f ${consul_persistent_device})${partition_prefix}2 ${consul_data} " /proc/mounts || mount ${consul_data}
@@ -59,7 +59,7 @@ bootcmd:
   - sed  -e '/^[\/][^ \t]*[ \t]*${nomad_home_escaped}[ \t]/d' /etc/fstab
   - grep -q ^LABEL=nomad-conf /etc/fstab || echo 'LABEL=nomad-conf ${nomad_home} ext4 defaults' >> /etc/fstab
   - grep -q "^$(readlink -f ${nomad_persistent_device})${partition_prefix}1 ${nomad_home} " /proc/mounts || mount ${nomad_home}
-  - chown nomad:certsreaders -R ${nomad_home}
+  - chown vault:certsreaders -R ${nomad_home}
   - sed  -e '/^[\/][^ \t]*[ \t]*${nomad_data_escaped}[ \t]/d' /etc/fstab
   - grep -q ^LABEL=nomad-data /etc/fstab || echo 'LABEL=nomad-data ${nomad_data} xfs defaults' >> /etc/fstab
   - grep -q "^$(readlink -f ${nomad_persistent_device})${partition_prefix}2 ${nomad_data} " /proc/mounts || mount ${nomad_data}
@@ -74,11 +74,11 @@ runcmd:
  - chown vault:vault ${vault_data}/storage
 %{ endif ~}
 %{ if consul_persistent_device != "" ~}
- - chown consul:certsreaders -R ${consul_home}
+ - chown vault:certsreaders -R ${consul_home}
  - chown consul:consul ${consul_data}
 %{ endif ~}
 %{ if nomad_persistent_device != "" ~}
- - chown nomad:certsreaders -R ${nomad_home}
+ - chown vault:certsreaders -R ${nomad_home}
  - chown nomad:nomad ${nomad_data}
 %{ endif ~}
  - sudo rm -rf /etc/{vault.d,consul.d,nomad.d}/lost+found

@@ -23,11 +23,13 @@ auto_auth {
        role="${gcp_node_role}"
        service_account="${gcp_service_account}"
        project="${gcp_project_id}"
+       max_backoff="1m"
     }
   }
 %{ endif }
 %{ if auto_auth_type == "aws" }
   method "aws" {
+    max_backoff="1m"
     config = {
        type="iam"
        role="${aws_node_role}"
@@ -38,6 +40,7 @@ auto_auth {
 %{ endif }
 %{ if auto_auth_type == "oci" }
   method "oci" {
+    max_backoff="1m"
     config = {
        auth_type="instance_principal"
        role="${oci_node_role}"
@@ -54,6 +57,7 @@ auto_auth {
 %{ endif }
 %{ if auto_auth_type == "azure" }
   method "azure" {
+    max_backoff="1m"
     config = {
       role="${azure_node_role}"
       resource="${azure_resource}"

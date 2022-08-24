@@ -18,12 +18,12 @@ vault {
 auto_auth {
 %{ if auto_auth_type == "gcp" }
   method "gcp" {
+    max_backoff="1m"
     config = {
        type="iam"
        role="${gcp_node_role}"
        service_account="${gcp_service_account}"
        project="${gcp_project_id}"
-       max_backoff="1m"
     }
   }
 %{ endif }
